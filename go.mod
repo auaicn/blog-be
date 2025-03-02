@@ -1,4 +1,4 @@
-module github.com/auaicn/blog-be
+module blog-be
 
 go 1.24.0
 
