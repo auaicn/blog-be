@@ -1,17 +1,21 @@
 package main
 
 import (
-	"blog-be/internal/blog/db"
-	"blog-be/routes" // Importing the routes package
 	"log"
 	"net/http"
+
+	"blog-be/internal/blog/db"
+	"blog-be/routes"
 )
 
 func main() {
-	// Initialize database connection
-	db.Connect() // Connects to the PostgreSQL database
+	dsn := "host=localhost user=apple dbname=blog port=5432 sslmode=disable"
 
-	// Initialize and start the HTTP server
+	// DB 연결 (필수)
+	if err := db.ConnectBoth(dsn); err != nil {
+		log.Fatalf("DB 연결 실패: %v", err)
+	}
+
 	r := routes.NewRouter()                    // Initializes the router from the routes package
 	log.Fatal(http.ListenAndServe(":8080", r)) // Starts the server on port 8080 and handles incoming HTTP requests
 }

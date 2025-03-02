@@ -2,18 +2,34 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var DB *sql.DB
+// DBManager 구조체: sql.DB와 gorm.DB를 모두 관리
+type DBManager struct {
+	SQL  *sql.DB
+	Gorm *gorm.DB
+}
 
-// Connect establishes a connection to the database
-func Connect() {
-	var err error
-	DB, err = sql.Open("postgres", "user=your_user dbname=blog sslmode=disable")
+var DB *DBManager // 전역 변수로 DBManager 선언
+
+// ConnectBoth: SQL과 GORM 둘 다 연결
+func ConnectBoth(dsn string) error {
+	sqlDB, err := sql.Open("postgres", dsn)
 	if err != nil {
-		log.Fatal("Error connecting to the database: ", err)
+		return fmt.Errorf("SQL 연결 실패: %w", err)
 	}
+
+	gormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return fmt.Errorf("GORM 연결 실패: %w", err)
+	}
+
+	DB = &DBManager{SQL: sqlDB, Gorm: gormDB} // 전역 변수에 할당
+	log.Println("✅ DB 연결 성공")
+	return nil
 }

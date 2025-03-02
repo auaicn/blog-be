@@ -9,7 +9,7 @@ import (
 
 func GetPosts(w http.ResponseWriter, r *http.Request) {
 	var posts []models.Post
-	if err := db.DB.Find(&posts).Error; err != nil {
+	if err := db.DB.Gorm.Find(&posts).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -23,7 +23,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := db.DB.Create(&post).Error; err != nil {
+	if err := db.DB.Gorm.Create(&post).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
