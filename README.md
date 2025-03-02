@@ -8,8 +8,14 @@
 
 ### How to Start
 
-1. Run Database Server
+1. Run Database Server (local)
 
-    Requirements 에 비교적 상세하게 실행 방법이 안내되어 있다.
+    ```shell
+    brew services start postgresql@14
+    ```
 
-2. Run Server
+2. Run Server (local)
+
+    ```shell
+    go run cmd/blog-server/main.go
+    ```
